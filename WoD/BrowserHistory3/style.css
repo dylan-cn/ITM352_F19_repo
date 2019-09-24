@@ -1,0 +1,41 @@
+h2 {
+  font-family : "Oswald";
+}
+
+h1 {
+  font-family: "Oswald";
+}
+
+p {
+  font-family: "Open Sans";
+  margin: 0px 5px 0px 5px;
+}
+
+body {
+  color: darkblue;
+  margin: 0 auto;
+  width: 900px;
+  background-color: ivory;
+}
+
+img {
+  float: left;
+}
+
+ul {
+  list-style-type: none;
+}
+
+li {
+  float: left;
+  margin: 10px 10px 10px 10px;
+}
+
+.clear-float {
+  clear: both;
+}
+
+.column {
+  float: left;
+  width: 300px;
+}
