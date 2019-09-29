@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Invoice 2</title>
+</head>
+
+<body>
+
+</body>
+
+<script>
+    let products = [];
+
+    // products
+    products.push({ name: "Rubbing Alcohol", quantity: 2, price: 0.99 });
+    products.push({ name: "Edge Shaving Cream", quantity: 2, price: 4.89 });
+    products.push({ name: "Gillette Razor", quantity: 2, price: 10.99 });
+    products.push({ name: "Crest Toothpaste", quantity: 2, price: 1.50 });
+    products.push({ name: "Chopsticks", quantity: 15, price: 5.12 });
+
+    // opening tags
+    document.write("<div>");
+    document.write("<table border='2'");
+    document.write("<tbody>");
+
+    // headers
+    document.write("<tr>");
+    document.write('<th style="text-align: center;" width="43%">Item</th>');
+    document.write('<th style="text-align: center;" width="11%">quantity</th>');
+    document.write('<th style="text-align: center;" width="13%">price</th>');
+    document.write('<th style="text-align: center;" width="54%">extended price</th>');
+    document.write('</tr>');
+
+    // keep track of total price
+    let subtotal = 0;
+    let taxPercent = 0.0575;
+
+    // make each product in table
+    for (let i = 0; i < products.length; i++) {
+        let price = products[i].price * products[i].quantity;
+        subtotal += price;
+
+        document.write(`<tr>`);
+        document.write(`<td width="43%">${products[i].name}</td>`);
+        document.write(`<td align="center" width="11%">${products[i].quantity}</td>`);
+        document.write(`<td width="13%">$${products[i].price}</td>`);
+        document.write(`<td width="54%">$${price.toFixed(2)}</td>`);
+        document.write(`</tr>`);
+    }
+
+    // white space row
+    document.write(`<tr>`);
+    document.write(`<td colspan="4" width="100%">&nbsp;</td>`);
+    document.write(`</tr>`);
+    document.write(`<tr>`);
+
+    // sub total
+    document.write(`<td style="text-align: center;" colspan="3" width="67%">Sub-total</td>`);
+    document.write(`<td width="54%">$${subtotal.toFixed(2)}</td>`);
+    document.write(`</tr>`);
+
+    // tax amount
+    let tax = subtotal * taxPercent;
+    document.write(`<tr>`);
+    document.write(`<td style="text-align: center;" colspan="3" width="67%"><span style="font-family: arial;">Tax @ 5.75%</span></td>`);
+    document.write(`<td width="54%">$${tax.toFixed(2)}</td>`);
+    document.write(`</tr>`);
+
+    // shipping
+    let shippingAmt = 0;
+    let shippingPercent = 0.05;
+    if (subtotal >= 100) {
+        shippingAmt = subtotal * shippingPercent;
+    } else if (subtotal >= 50) {
+        shippingAmt = 5.00;
+    } else {
+        shippingAmt = 2.00;
+    }
+
+    document.write(`<tr>`);
+    document.write(`<td style="text-align: center;" colspan="3" width="67%"><span style="font-family: arial;">Shipping</span></td>`);
+    document.write(`<td width="54%">$${shippingAmt.toFixed(2)}</td>`);
+    document.write(`</tr>`);
+
+    // total with tax
+    let total = subtotal + tax + shippingAmt;
+    document.write(`<tr>`);
+    document.write(`<td style="text-align: center;" colspan="3" width="67%"><strong>Total</strong></td>`);
+    document.write(`<td width="54%"><strong>$${total.toFixed(2)}</strong></td>`);
+    document.write(`</tr>`);
+
+    // closing tags
+    document.write("</tbody>");
+    document.write("</table");
+    document.write("<div>");
+
+</script>
+
+</html>
