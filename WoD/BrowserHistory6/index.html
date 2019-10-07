@@ -13,9 +13,9 @@
 
 <div>
   <ul>
-    <li><input type="button" value="FireFox" onclick="window.location.href = 'firefox.html'" onmouseover="imgbox.innerHTML = '<img width=200px height=200px src=http://upload.wikimedia.org/wikipedia/commons/f/ff/Mozilla_Firefox_logo_2013.png />'";></li>
-    <li><input type="button" value="Chrome" onclick="window.location.href = 'chrome.html'" onmouseover="imgbox.innerHTML = '<img width=200px height=200px src=http://upload.wikimedia.org/wikipedia/commons/e/e2/Google_Chrome_icon_%282011%29.svg />'";></li>
-    <li><input type="button" value="Internet Explorer" onclick="window.location.href = 'ie.html'" onmouseover="imgbox.innerHTML = '<img width=200px height=200px src=http://upload.wikimedia.org/wikipedia/en/1/10/Internet_Explorer_7_Logo.png />'";></li>
+    <li><input type="button" value="FireFox" onclick="window.location.href = 'firefox.html'" onmouseover="putImg('http://upload.wikimedia.org/wikipedia/commons/f/ff/Mozilla_Firefox_logo_2013.png')"></li>
+    <li><input type="button" value="Chrome" onclick="window.location.href = 'chrome.html'" onmouseover="putImg('http://upload.wikimedia.org/wikipedia/commons/e/e2/Google_Chrome_icon_%282011%29.svg')"></li>
+    <li><input type="button" value="Internet Explorer" onclick="window.location.href = 'ie.html'" onmouseover="putImg('http://upload.wikimedia.org/wikipedia/en/1/10/Internet_Explorer_7_Logo.png')"></li>
   </ul>
 </div>
 
@@ -31,4 +31,10 @@
 </div>
 
 </body>
+
+<script>
+    function putImg(img) {
+      imgbox.innerHTML = `<img width='200px' height='200px' src=${img} />`;
+    }
+  </script>
 </html>
