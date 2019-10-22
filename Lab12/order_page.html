@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <form action="./process_order.html" method="post">
+        <label>quantity desired: </label>
+        <input type="text" name="quantity_textbox" onkeyup="checkQuantityTextbox(this);" />
+        <span id='qty_textbox_message'>Enter a quantity</span>
+
+        <div class="button">
+            <button type="submit">Send your message</button>
+        </div>
+    </form>
+</body>
+
+<script>
+    function checkQuantityTextbox(obj) {
+        document.getElementById("qty_textbox_message").innerHTML = obj.value;
+    }
+</script>
+
+</html>
