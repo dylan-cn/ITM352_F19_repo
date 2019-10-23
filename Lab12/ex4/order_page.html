@@ -9,7 +9,13 @@
 </head>
 
 <body>
-    <form name="quantity_form" action="#" method="GET" onsubmit="displayPurchase(quantity_form.quantity_textbox.value);">
+    <script>
+        let params = (new URL(document.location)).searchParams;
+        let GET = {};
+        params.forEach(function (value, key) { GET[key] = value });
+    </script>
+
+    <form name="quantity_form" action="#" method="GET" onsubmit="">
         <label>quantity desired: </label>
         <input type="text" name="quantity_textbox" onkeyup="checkQuantityTextbox()" />
         <span id='qty_textbox_message'>Enter a quantity</span>
@@ -19,39 +25,36 @@
 </body>
 
 <script>
+    if (GET.quantity_textbox && !isPositiveInteger(GET.quantity_textbox)) {
+        quantity_form.quantity_textbox.value = GET.quantity_textbox;
+    } else {
+        displayPurchase();
+    }
 
-    /*
-    a) (2 minutes) Re-write #3 so that it uses the GET method and the action is the current page. You will need to get the data for the textbox from the query string using
-    let params = (new URL(document.location)).searchParams;
-    GET = {};
-    params.forEach(function (value, key) { GET[key] = value });
-    Remove displayPurchase() function definition and replace it with if (typeof GET['quantity_textbox'] != 'undefined'). Get the value from the textbox from GET['quantity_textbox'] rather than from the textbox directly. You can use window.stop(); to prevent the reset of the page from loading if you do not want the form to render again. To make the textbox “sticky” when there is an invalid quantity submitted you can get the previous value of the textbox from the query string and set the value if the textbox to it anytime after the textbox is rendered.
+    function displayPurchase() {
+        if (GET.quantity_textbox != 'undefined') {
+            if (!isPositiveInteger(GET.quantity_textbox)) {
+                return;
+            }
 
-    */
-
-    function displayPurchase(quantity) {
-        console.log("submit actions");
-        if (!isPositiveInteger(quantity)) {
-            return;
+            let newPage = window.open("");
+            newPage.document.write(`
+                    <!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                        <title>Purchase</title>
+                    </head>
+                    <body>
+                        <div>
+                            Thank you for ordering ${GET.quantity_textbox} things.
+                        </div>
+                    </body>
+                    </html>
+                `);
         }
-
-        let newPage = window.open("");
-        newPage.document.write(`
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <meta http-equiv="X-UA-Compatible" content="ie=edge">
-                <title>Purchase</title>
-            </head>
-            <body>
-                <div>
-                    Thank you for ordering ${quantity} things.
-                </div>
-            </body>
-            </html>
-        `);
     }
 
     function checkQuantityTextbox() {
