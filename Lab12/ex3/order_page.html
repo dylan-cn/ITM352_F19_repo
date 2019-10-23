@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <form name="quantity_form" action="javascript:displayPurchase(quantity_form.quantity_textbox.value);">
+        <label>quantity desired: </label>
+        <input type="text" name="quantity_textbox" onkeyup="checkQuantityTextbox()" />
+        <span id='qty_textbox_message'>Enter a quantity</span>
+
+        <input type="submit" value="Submit" />
+    </form>
+</body>
+
+<script>
+
+    /*
+    a. Add a <form> element with name="quantity_form" action="" onsubmit="displayPurchase();" and change the input to a submit button that when pressed will displayPurchase(). Change the id to a name attribute for the textbox. Note that where you use quantity_textbox you will need to use quantity_form.quantity_textbox or quantity_form["quantity_textbox"]
+    b. Because the action is empty it defaults to the current page. When an action is called the page reloads and what the user types is lost if there is an error. One way to avoid this is to set the action to call the function rather than make a http request to load a page. Change the action to javascript:displayPurchase() and remove the onsubmit attribute.
+
+    */
+
+    function displayPurchase(quantity) {
+        console.log("submit actions");
+        if (!isPositiveInteger(quantity)) {
+            return;
+        }
+
+        let newPage = window.open("");
+        newPage.document.write(`
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                <title>Purchase</title>
+            </head>
+            <body>
+                <div>
+                    Thank you for ordering ${quantity} things.
+                </div>
+            </body>
+            </html>
+        `);
+    }
+
+    function checkQuantityTextbox() {
+        //let input = document.getElementById("quantity_textbox").value;
+        let input = quantity_form.quantity_textbox.value;
+        let validateData = isPositiveInteger(input, true);
+        if (validateData.length === 0) {
+            document.getElementById("qty_textbox_message").innerHTML = input;
+        } else {
+            document.getElementById("qty_textbox_message").innerHTML = validateData;
+        }
+    }
+
+    function isPositiveInteger(valueToCheck, returnErrors = false) {
+        errors = []; // assume no errors at first
+        if (Number(valueToCheck) != valueToCheck) errors.push('Not a number!'); // Check if string is a number value
+        if (valueToCheck < 0) errors.push('Negative value!'); // Check if it is non-negative
+        if (parseInt(valueToCheck) != valueToCheck) errors.push('Not an integer!'); // Check that it is an integer
+
+        return returnErrors ? errors : (errors.length == 0);
+    }
+</script>
+
+</html>

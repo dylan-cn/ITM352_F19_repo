@@ -1,28 +1,14 @@
 /*
-c. Following good function naming conventions, rename the function you created in (a) and explain briefly why it is or is not an appropriate name that follows the conventions. Rename the parameter and add comments to the top of the function that explains what the function does and how to use it.
+
+Create a function that takes an array of numbers, called monthly_sales (a list of monthly sales amounts), and a tax rate (tax_rate) as inputs. The function must return an array called tax_owing, which consists of one entry for every entry in monthly_sales indicating the tax owing for that entry.
+
 */
 
-function isPositiveInteger(valueToCheck, logErrors = false) {
-    let errors = [];
+function taxOwedForMonthlySales(monthly_sales, tax_rate) {
+    let tax_owing = monthly_sales.map(x => x * tax_rate);
 
-    // first check if value is a number
-    if (typeof valueToCheck !== 'number') {
-        errors.push(`${valueToCheck} is not a number`);
-    } else {
-        // Check value is actually an integer
-        if (valueToCheck !== parseInt(valueToCheck)) {
-            errors.push(`${valueToCheck} is not an integer`);
-        } else {
-            // Check negative or not
-            if (valueToCheck < 0) {
-                errors.push(`${valueToCheck} is a negative number`);
-            }
-        }
-    }
-
-    return (logErrors && errors.length > 0) ? errors : errors.length > 0 ? false : true;
+    return tax_owing;
 }
 
-let pieces = ['Dylan', 25, 25 + 0.5, 0.5 - 25];
-pieces.forEach(x => console.log(x.length > 0));
-
+let monthly_sales = [10, 11, 12];
+console.log(taxOwedForMonthlySales(monthly_sales, 0.1));
