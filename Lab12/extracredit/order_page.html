@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let params = (new URL(document.location)).searchParams;
+        let GET = {};
+        params.forEach(function (value, key) { GET[key] = value });
+    </script>
+
+    <form name="quantity_form" action="#" method="GET" onsubmit="">
+        <label>quantity desired: </label>
+
+        <select id="select" name="quantity">
+        </select>
+
+        <span id='qty_textbox_message'>Enter a quantity</span>
+
+        <input type="submit" value="Submit" />
+    </form>
+</body>
+
+<script>
+    // append options to select
+    let selectElement = document.getElementById("select");
+    for (let i = 1; i <= 10; i++) {
+        let option = document.createElement('option');
+        option.value = i;
+        option.innerHTML = i;
+        selectElement.appendChild(option);
+    }
+
+    displayPurchase();
+
+    function displayPurchase() {
+        if (GET.quantity != 'undefined') {
+            if (!isPositiveInteger(GET.quantity)) {
+                return;
+            }
+
+            let newPage = window.open("");
+            newPage.document.write(`
+                    <!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                        <title>Purchase</title>
+                    </head>
+                    <body>
+                        <div>
+                            Thank you for ordering ${GET.quantity} things.
+                        </div>
+                    </body>
+                    </html>
+                `);
+        }
+    }
+
+    function checkQuantityTextbox() {
+        //let input = document.getElementById("quantity_textbox").value;
+        let input = quantity_form.quantity.value;
+        let validateData = isPositiveInteger(input, true);
+        if (validateData.length === 0) {
+            document.getElementById("qty_textbox_message").innerHTML = input;
+        } else {
+            document.getElementById("qty_textbox_message").innerHTML = validateData;
+        }
+    }
+
+    function isPositiveInteger(valueToCheck, returnErrors = false) {
+        errors = []; // assume no errors at first
+        if (Number(valueToCheck) != valueToCheck) errors.push('Not a number!'); // Check if string is a number value
+        if (valueToCheck < 0) errors.push('Negative value!'); // Check if it is non-negative
+        if (parseInt(valueToCheck) != valueToCheck) errors.push('Not an integer!'); // Check that it is an integer
+
+        return returnErrors ? errors : (errors.length == 0);
+    }
+</script>
+
+</html>
