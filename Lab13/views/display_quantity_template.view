@@ -1,0 +1,1 @@
+<h1>Thank you for purchasing ${POST.quantity_textbox} ${products[0]['model']}. Your total is \$${POST.quantity_textbox * products[0]['price']}!</h1> 

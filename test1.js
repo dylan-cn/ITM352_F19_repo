@@ -4,6 +4,10 @@ Create a function that takes an array of numbers, called monthly_sales (a list o
 
 */
 
+
+
+
+
 function taxOwedForMonthlySales(monthly_sales, tax_rate) {
     let tax_owing = monthly_sales.map(x => x * tax_rate);
 
