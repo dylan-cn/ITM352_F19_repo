@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Menu } from 'semantic-ui-react';
 
 function Navbar() {
-    const [activeItem, setActiveItem] = useState('home');
+    const [activeItem, setActiveItem] = useState('');
 
     return (
         <Menu>
-            <Menu.Item as={NavLink} to="/"
+            <Menu.Item as={Link} to="/"
                 name='home'
                 active={activeItem === 'home'}
                 onClick={() => setActiveItem('home')}
@@ -15,7 +15,7 @@ function Navbar() {
                 Home
             </Menu.Item>
 
-            <Menu.Item as={NavLink} to="/store"
+            <Menu.Item as={Link} to="/store"
                 name='store'
                 active={activeItem === 'store'}
                 onClick={() => setActiveItem('store')}

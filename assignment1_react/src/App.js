@@ -5,21 +5,33 @@ import 'semantic-ui-css/semantic.min.css';
 import './App.css';
 import Navbar from './ui/components/Navbar';
 import Footer from './ui/components/Footer';
+import Store from './ui/pages/Store';
+import Home from './ui/pages/Home';
 
 function App() {
   return (
     <Router>
-      <Container>
-        <Navbar />
+      <div id="page-container">
+        <Container>
+          <div id="content-wrap">
+          <Navbar />
+          <Switch>
+            <Route exact path='/'>
+              <Home />
+            </Route>
 
-        <Switch>
-          <Route exact path='/'>
+            <Router exact path='/store'>
+              <Store />
+            </Router>
+          </Switch>
 
-          </Route>
-        </Switch>
+          </div>
+        </Container>
+      </div>
 
-        <Footer />
-      </Container>
+      <div id="footer">
+          <Footer />
+      </div>
     </Router>
   );
 }
