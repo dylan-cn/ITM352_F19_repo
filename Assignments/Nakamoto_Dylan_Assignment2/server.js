@@ -51,16 +51,14 @@ app.post('/loginPurchase', function (req, res) {
 // Process requests to register a user
 app.post('/processRegister', function (req, res) {
     // find user in "database"
-    let userIdx = users.findIndex(user => {
-        return user.username.toLowerCase() === req.body.username.toLowerCase();
-    });
+    let userExists = typeof users[req.body.username] === 'undefined' ? false: true;
 
     let message = {};
     let userData = req.body;
 
     let canRegister = false;
     // CHECK: ensure username does not exist
-    if (userIdx === -1) {
+    if (!userExists) {
         // CHECK: password match
         if (userData.password === userData.passwordConfirm) {
             // CHECK: email validation
@@ -91,8 +89,16 @@ app.post('/processRegister', function (req, res) {
 
     // Add user to file if can register
     if (canRegister) {
-        users.push({ "username": userData.username, "password": userData.password, "email": userData.email });
+        // Add to the object
+        users[userData.username] = {
+            name: userData.name,
+            password: userData.password,
+            email: userData.email
+        };
+
+        // Write to the file
         fs.writeFile('./users.json', JSON.stringify(users), function (err) {
+            // If could not write to file... catastrophic error occurred
             if (err) {
                 message = {
                     success: false,
@@ -102,7 +108,7 @@ app.post('/processRegister', function (req, res) {
         });
     }
 
-    // send message back
+    // send message back to request
     if (message.success) {
         res.status(200).json(message);
     } else {
@@ -113,16 +119,15 @@ app.post('/processRegister', function (req, res) {
 // Process requests to login
 app.post('/processLogin', function (req, res) {
     // find user in "database"
-    let userIdx = users.findIndex(user => {
-        return user.username.toLowerCase() === req.body.username.toLowerCase();
-    });
+    let userExists = typeof users[req.body.username] === 'undefined' ? false: true;
 
     let message = {};
+    let userData = req.body;
 
     // Check to make sure user exists
-    if (userIdx != -1) {
+    if (userExists) {
         // Check to make sure passwords match
-        if (users[userIdx].password === req.body.password) {
+        if (users[userData.username].password === userData.password) {
             message = {
                 success: true,
                 msg: "Login successful"
@@ -140,6 +145,7 @@ app.post('/processLogin', function (req, res) {
         }
     }
 
+    // Send something back to client
     if (message.success) {
         res.status(200).json(message);
     } else {

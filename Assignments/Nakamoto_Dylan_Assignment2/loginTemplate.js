@@ -174,7 +174,7 @@ module.exports = {
                         <input id="password" name='password' type='password' placeholder="Password"></input>
 
                         <!-- Login submit button -->
-                        <input name='login-btn' class='login-btn btn' type='button' value='Login' onclick="validation(this);">
+                        <input name='login-btn' class='login-btn btn' type='submit' value='Login' onclick="validation(this);">
                     </form>
 
                     Don't have an account?
@@ -189,6 +189,8 @@ module.exports = {
                 <div style='margin: 10px 10px 10px 10px;'>
                     <h2>Register...</h2>
                     <form id='registerForm'>
+                        <input name='name' type='text' placeholder='Full Name (First Last)'></input>
+
                         <input name='username' type='text' placeholder="Username"></input>
 
                         <input name='password' type='password' placeholder="Password"></input>
@@ -198,7 +200,7 @@ module.exports = {
                         <input name='email' type='text' placeholder="E-mail"></input>
 
                         <!-- Register submit button -->
-                        <input name='register-btn' class='register-btn btn' type='button' value='Register' onclick="registerUser(this);">
+                        <input name='register-btn' class='register-btn btn' type='submit' value='Register' onclick="registerUser(this);">
                     </form>
 
                     Already have an account?
