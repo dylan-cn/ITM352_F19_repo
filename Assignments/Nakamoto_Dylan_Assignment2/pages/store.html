@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Store</title>
+
+    <link rel='stylesheet' type='text/css' href='/css/items.css'>
+    <link rel='stylesheet' type='text/css' href='/css/app.css'>
+    <link rel='stylesheet' type='text/css' href='/css/navbar.css'>
+    <link rel='stylesheet' type='text/css' href='/css/store.css'>
+
+    <script>
+        // Validate the form data before sending to server
+        function validation() {
+            // get form
+            const form = document.getElementById('purchaseForm');
+            // get all inputs of form
+            const inputs = form.elements;
+
+            let validSubmission = false;
+            // check each input
+            for (let i = 0; i < inputs.length; i++) {
+                // only look at inputs relating to items
+                if (inputs[i].className === 'iItem') {
+                    // as long as any item has a value we can send the form
+                    if (inputs[i].value !== '' && +inputs[i].value != 0) {
+                        validSubmission = true;
+                        break;
+                    }
+                }
+            }
+
+            // submit the form if valid
+            // else put an alert
+            if (validSubmission) {
+                form.submit();
+            } else {
+                alert('You do not have any items for purchase!');
+            }
+        }
+
+        // check if valid value
+        function isPositiveInteger(valueToCheck, returnErrors = false) {
+            let errors = []; // assume no errors at first
+            if (Number(valueToCheck) != valueToCheck) errors.push('Not a number!'); // Check if string is a number value
+            if (valueToCheck < 0) errors.push('Negative value!'); // Check if it is non-negative
+            if (parseInt(valueToCheck) != valueToCheck) errors.push('Not an integer!'); // Check that it is an integer
+
+            return res = returnErrors ? errors : (errors.length == 0);
+        }
+
+        // validate data
+        function validateData(obj) {
+            let msg = '';
+            const elem = document.getElementById(obj.name + "_error");
+
+            // check for empty first
+            if (obj.value === '') {
+                elem.innerHTML = msg;
+                return;
+            }
+
+            // check for positive integers
+            const errors = isPositiveInteger(obj.value, true);
+
+            if (errors.length > 0) {
+                msg = "Invalid quantity!";
+            } else {
+                msg = "";
+            }
+
+            // display error
+            elem.innerHTML = msg;
+        }
+    </script>
+
+</head>
+
+<body>
+    <ul class='navbar'>
+        <li><a href='/'>Home</a></li>
+        <li><a class='active' href='store'>Store</a></li>
+    </ul>
+
+    <h1 align="center">Store</h1>
+
+    <!-- Form used to collect data and post to server -->
+    <div class='form'>
+        <form id='purchaseForm' method="POST" action='/loginPurchase'>
+            <div class="container" id='products'>
+
+            </div>
+            <div class='purchase'>
+                <input class='purchase' type='button' value='Purchase' onclick="validation();">
+            </div>
+        </form>
+    </div>
+
+    <!-- Retrieve data from the server -->
+    <script>
+        let products = [];
+        async function fetchData() {
+            const res = await fetch('/api/products');
+            res.json()
+                .then(function (data) {
+                    let elem = document.getElementById('products');
+                    data.forEach((i) => {
+                        elem.innerHTML += `
+                            <div class="item" id="${i.name}">
+                                <h3>${i.name}</h3>
+                                <img src=${i.imgUrl} style="" />
+                                <p>Price: $${i.price}</p>
+                                <div style='height: 60px;'>
+                                    <span style='font-size: 18px;'>Quantity:</span>
+                                    <input class='iItem' name="${i.name}" type='text' style='width: 50px;' onkeyup='validateData(this);'></input>
+                                    <p id="${i.name}_error"></p>
+                                </div>
+                            </div>`;
+                    });
+                })
+                .catch(err => console.log(err));
+        }
+
+        fetchData();
+    </script>
+</body>
+
+</html>

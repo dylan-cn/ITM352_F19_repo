@@ -1,0 +1,17 @@
+[
+    {
+        "username": "itm352",
+        "password": "grader",
+        "email": "grader@itm352.edu"
+    },
+    {
+        "username": "dylan",
+        "password": "united",
+        "email": "dylancn@hawaii.edu"
+    },
+    {
+        "username": "root",
+        "password": "admin",
+        "email": "root@admin.com"
+    }
+]

@@ -1,0 +1,20 @@
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+div.item {
+    margin: 5px auto 5px auto;
+    border-style: solid;
+    border-radius: 10px;
+    border-width: 2px;
+    text-align: center;
+    background-color: white;
+    width: 300px;
+}
+
+div.item img {
+    height: 400px;
+    width: 300px;
+}

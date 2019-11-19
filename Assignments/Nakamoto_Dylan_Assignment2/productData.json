@@ -1,0 +1,34 @@
+{
+    "arrayOfProducts": [
+        {
+            "imgUrl": "/images/shirt.jpg",
+            "name": "CHECK PRINT SHIRT",
+            "price": 110,
+            "stock": 0
+        },
+        {
+            "imgUrl": "/images/shoe.jpg",
+            "name": "GLORIA HIGH LOGO SNEAKER",
+            "price": 91,
+            "stock": 10
+        },
+        {
+            "imgUrl": "/images/bag.jpg",
+            "name": "CATE RIGID BAG",
+            "price": 94.5,
+            "stock": 9
+        },
+        {
+            "imgUrl": "/images/watch.jpg",
+            "name": "GUESS CONNECT WATCH",
+            "price": 438.9,
+            "stock": 100
+        },
+        {
+            "imgUrl": "/images/scarf.jpg",
+            "name": "'70s RETRO GLAM KEFIAH",
+            "price": 20,
+            "stock": 4
+        }
+    ]
+}
