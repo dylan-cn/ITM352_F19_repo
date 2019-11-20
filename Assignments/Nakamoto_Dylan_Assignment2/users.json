@@ -13,5 +13,5 @@
         "name": "Root User",
         "password": "admin",
         "email": "root@admin.com"
-    },
+    }
 }

@@ -105,7 +105,7 @@ module.exports = {
                 // send request to server to register user
                 async function registerUser(obj) {
                     // disable the login button while processing
-                    obj.disabled = true;
+                    obj.registerBtn.disabled = true;
 
                     // get form
                     const form = document.getElementById('registerForm');
@@ -120,33 +120,40 @@ module.exports = {
                         }
                     }
 
-                    // Do client side password, email validation here
+                    // Client side validation
+                    let validation = validateRegistration(obj);
 
-                    let validSubmission = false;
-                    let response = '';
-                    // send a post to server
-                    await sendRegisterRequest(userInfo).then(function (data) {
-                        console.log(data);
-                        if (data.success) {
-                            validSubmission = true;
+                    // if does not pass validation, just exit function
+                    if (validation) {
+                        let validSubmission = false;
+                        let response = '';
+                        // send a post to server
+                        await sendRegisterRequest(userInfo).then(function (data) {
+                            console.log(data);
+                            if (data.success) {
+                                validSubmission = true;
+                            } else {
+                                validSubmission = false;
+                                response = data.msg;
+                            }
+                        });
+
+                        // send to checkout if valid
+                        // ** Submit the form **
+                        if (validSubmission) {
+                            alert('Successful created account');
+                            
+                            document.getElementById('productsForm').submit();
                         } else {
-                            validSubmission = false;
-                            response = data.msg;
+                            alert('Could not create account: ' + response);
                         }
-                    });
-
-                    // send to checkout if valid
-                    // ** Submit the form **
-                    if (validSubmission) {
-                        alert('Successful created account');
-                        
-                        document.getElementById('productsForm').submit();
                     } else {
-                        alert('Could not create account: ' + response);
+                        console.log("bad submission");
                     }
+                    
 
                     // enable login button after we finish
-                    obj.disabled = false;
+                    obj.registerBtn.disabled = false;
                 }
 
                 async function sendRegisterRequest(userInfo) {
@@ -160,6 +167,100 @@ module.exports = {
 
                     return await res.json();
                 }
+                
+                // Check username, password, passwordConfirm, email, name
+                function validateRegistration(input) {
+                    let inputForm = input;
+                    let errors = [];
+                
+                    let nameErr = document.getElementById("_nameError");
+                    let passwordErr = document.getElementById("_passwordError");
+                    let usernameErr = document.getElementById("_usernameError");
+                    let emailErr = document.getElementById("_emailError");
+                    
+                    // check username
+                    // 4-10chars
+                    // only letter and numbers
+                    let usernameRegex = /^[a-zA-Z0-9]*$/;
+                    let username = inputForm.username.value;
+                    if (username.length < 4 || username.length > 10 || !usernameRegex.test(username)) {
+                        errors.push('Invalid username: Username must be 4-10 characters in length and can only contain letters and numbers.');
+                
+                        usernameErr.style.display = "block";
+                        usernameErr.innerHTML = 'Username must be 4-10 characters in length and can only contain letters and numbers.';
+                    } else {
+                        usernameErr.style.display = "none";
+                        usernameErr.innerHTML = '';
+                    }
+                
+                    // Check password: min 6 characters
+                    let password = inputForm.password.value;
+                    let passwordConfirm = inputForm.passwordConfirm.value;
+                    if (password !== passwordConfirm) {
+                        errors.push('Invalid password: Passwords do not match.');
+                        passwordErr.style.display = "block";
+                        passwordErr.innerHTML = 'Passwords do not match.';
+                    } else {
+                        if (password.length < 6) {
+                            errors.push('Invalid password: Password length must be 6 or greater');
+                            passwordErr.style.display = "block";
+                            passwordErr.innerHTML = 'Password length must be 6 or greater';
+                        } else {
+                            passwordErr.style.display = "none";
+                            passwordErr.innerHTML = '';
+                        }
+                    }
+                
+                    let emailRegex = ${/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/};
+                    // check email
+                    if (!emailRegex.test(inputForm.email.value)) {
+                        console.log("passed email");
+                        errors.push('Invalid email: ' + inputForm.email.validationMessage);
+                        emailErr.style.display = 'block';
+                        emailErr.innerHTML = 'Email is not valid.';
+                    } else {
+                        emailErr.style.display = 'none';
+                        emailErr.innerHTML = '';
+                    }
+                
+                    // Check name: letters only and less than or equal to 30 characters
+                    let nameRegex = /^[a-zA-Z ]*$/;
+                    let name = inputForm.name.value;
+                    if (name.length <= 0 || name.length > 30 || !nameRegex.test(name)) {
+                        errors.push('Invalid name: Your name must be at max 30 characters and can only contain letters');
+                        nameErr.style.display = 'block';
+                        nameErr.innerHTML = 'Your name must be at max 30 characters and can only contain letters';
+                    } else {
+                        nameErr.style.display = 'none';
+                        nameErr.innerHTML = '';
+                    }
+                
+                    if (errors.length > 0 ) {
+                        // write errors
+                        let errorDiv = "<ul>!!replace!!</ul>";
+                
+                        let lis = '';
+                        errors.map(function(error) {
+                            let h = '<li>' + error + '</li>';
+                            lis += h;
+                        });
+                
+                        let final = errorDiv.replace("!!replace!!", lis);
+                
+                        let errorSection = document.getElementById("registerErrors");
+                        //errorSection.style.display = 'block';
+                        errorSection.innerHTML = final;
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+
+                function validateEmail(input){
+                    if (input.validity.typeMismatch) {
+                        input.setCustomValidity("Enter a valid email");
+                    }
+                }
             </script>
             </body>
             </html>
@@ -170,8 +271,8 @@ module.exports = {
                 <div style='margin: 10px 10px 10px 10px;'>
                     <h2>Sign in...</h2>
                     <form id='loginForm'>
-                        <input id="username" name='username' type='text' placeholder="Username"></input>
-                        <input id="password" name='password' type='password' placeholder="Password"></input>
+                        <input id="username" name='username' type='text' placeholder="Username" required></input>
+                        <input id="password" name='password' type='password' placeholder="Password" required></input>
 
                         <!-- Login submit button -->
                         <input name='login-btn' class='login-btn btn' type='submit' value='Login' onclick="validation(this);">
@@ -188,23 +289,32 @@ module.exports = {
             <div id='registerD' class="form" style="display: none; border: 1px solid black;">
                 <div style='margin: 10px 10px 10px 10px;'>
                     <h2>Register...</h2>
-                    <form id='registerForm'>
-                        <input name='name' type='text' placeholder='Full Name (First Last)'></input>
+                    <form id='registerForm' onsubmit="registerUser(this); return false;">
+                        
+                        <input name='name' type='text' placeholder='Full Name (First Last)' required></input>
+                        <span style="display: none;" id="_nameError" class="formerror"></span>
+                        
+                        <input name='username' type='text' placeholder="Username" required></input>
+                        <span style="display: none;" id="_usernameError" class="formerror"></span>
 
-                        <input name='username' type='text' placeholder="Username"></input>
+                        <input name='password' type='password' placeholder="Password" required></input>
+                        <span style="display: none;" id="_passwordError" class="formerror"></span>
 
-                        <input name='password' type='password' placeholder="Password"></input>
+                        <input name='passwordConfirm' type='password' placeholder="Retype Password" required></input>
+                        <span style="display: none;" id="_passwordConfirmError" class="formerror"></span>
 
-                        <input name='passwordConfirm' type='password' placeholder="Retype Password"></input>
-
-                        <input name='email' type='text' placeholder="E-mail"></input>
+                        <input name='email' type='text' placeholder="E-mail" required></input>
+                        <span style="display: none;" id="_emailError" class="formerror"></span>
 
                         <!-- Register submit button -->
-                        <input name='register-btn' class='register-btn btn' type='submit' value='Register' onclick="registerUser(this);">
+                        <input name='registerBtn' class='register-btn btn' type='submit' value='Register'>
                     </form>
 
                     Already have an account?
                     <input style="margin: 5px 5px 5px 5px;" name='login-btn' class='btn small' type='button' value='Login' onclick="loginHandler();">
+
+                    <div style="display: none;" id="registerErrors">
+                    </div>
 
                 </div>
             </div>
