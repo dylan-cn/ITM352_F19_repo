@@ -291,19 +291,19 @@ module.exports = {
                     <h2>Register...</h2>
                     <form id='registerForm' onsubmit="registerUser(this); return false;">
                         
-                        <input name='name' type='text' placeholder='Full Name (First Last)' required></input>
+                        <input name='name' type='text' placeholder='Full Name (First Last)'></input>
                         <span style="display: none;" id="_nameError" class="formerror"></span>
                         
-                        <input name='username' type='text' placeholder="Username" required></input>
+                        <input name='username' type='text' placeholder="Username"></input>
                         <span style="display: none;" id="_usernameError" class="formerror"></span>
 
-                        <input name='password' type='password' placeholder="Password" required></input>
+                        <input name='password' type='password' placeholder="Password"></input>
                         <span style="display: none;" id="_passwordError" class="formerror"></span>
 
-                        <input name='passwordConfirm' type='password' placeholder="Retype Password" required></input>
+                        <input name='passwordConfirm' type='password' placeholder="Retype Password"></input>
                         <span style="display: none;" id="_passwordConfirmError" class="formerror"></span>
 
-                        <input name='email' type='text' placeholder="E-mail" required></input>
+                        <input name='email' type='text' placeholder="E-mail"></input>
                         <span style="display: none;" id="_emailError" class="formerror"></span>
 
                         <!-- Register submit button -->
