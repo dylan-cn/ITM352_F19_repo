@@ -147,11 +147,8 @@ module.exports = {
                         } else {
                             alert('Could not create account: ' + response);
                         }
-                    } else {
-                        console.log("bad submission");
                     }
                     
-
                     // enable login button after we finish
                     obj.registerBtn.disabled = false;
                 }
@@ -214,7 +211,6 @@ module.exports = {
                     let emailRegex = ${/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/};
                     // check email
                     if (!emailRegex.test(inputForm.email.value)) {
-                        console.log("passed email");
                         errors.push('Invalid email: ' + inputForm.email.validationMessage);
                         emailErr.style.display = 'block';
                         emailErr.innerHTML = 'Email is not valid.';
