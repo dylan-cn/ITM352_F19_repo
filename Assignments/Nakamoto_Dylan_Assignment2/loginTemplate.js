@@ -95,6 +95,14 @@ module.exports = {
             // ** Submit the form **
             if (validSubmission) {
                 alert('Successful login');
+
+                // Append username to productsForm to pass along user
+                let uninput = document.createElement("input");
+                uninput.name = "username";
+                uninput.value = userInfo.username;
+                document.getElementById('productsForm').appendChild(uninput);
+
+                // submit the form
                 document.getElementById('productsForm').submit();
             } else if (clientValidation && !validSubmission) {
                 alert('Invalid login: ' + response);
@@ -126,11 +134,7 @@ module.exports = {
             let registerForm = document.getElementById("registerD");
             registerForm.style.display = 'none';
 
-            // hide all form error spans
-            let htmlErrors = document.getElementsByClassName("formerror");
-            for (let error of htmlErrors) {
-                error.style.display = 'none';
-            }
+            clearFormErrors();
         }
 
         // show register handler
@@ -141,7 +145,11 @@ module.exports = {
             let registerForm = document.getElementById("registerD");
             registerForm.style.display = 'block';
 
-            // hide all form error spans
+            clearFormErrors();
+        }
+
+        // hide all form error spans
+        function clearFormErrors() {
             let htmlErrors = document.getElementsByClassName("formerror");
             for (let error of htmlErrors) {
                 error.style.display = 'none';
@@ -175,7 +183,6 @@ module.exports = {
                 let response = '';
                 // send a post to server
                 await sendRegisterRequest(userInfo).then(function (data) {
-                    console.log(data);
                     if (data.success) {
                         validSubmission = true;
                     } else {
@@ -188,17 +195,25 @@ module.exports = {
                 // ** Submit the form **
                 if (validSubmission) {
                     alert('Successful created account');
-                    
+
+                    // Append username to productsForm to pass along user
+                    let uninput = document.createElement("input");
+                    uninput.name = "username";
+                    uninput.value = userInfo.username;
+                    document.getElementById('productsForm').appendChild(uninput);
+
+                    // submit the form
                     document.getElementById('productsForm').submit();
                 } else {
                     alert('Could not create account: ' + response);
                 }
             }
-            
+
             // enable login button after we finish
             obj.registerBtn.disabled = false;
         }
 
+        // Send post to register user
         async function sendRegisterRequest(userInfo) {
             const res = await fetch('/processRegister', {
                 method: 'POST',
@@ -210,17 +225,17 @@ module.exports = {
 
             return await res.json();
         }
-        
+
         // Check username, password, passwordConfirm, email, name
         function validateRegistration(input) {
             let inputForm = input;
             let errors = [];
-        
+
             let nameErr = document.getElementById("_nameError");
             let passwordErr = document.getElementById("_passwordError");
             let usernameErr = document.getElementById("_usernameError");
             let emailErr = document.getElementById("_emailError");
-            
+
             // check username
             // 4-10chars
             // only letter and numbers
@@ -228,14 +243,14 @@ module.exports = {
             let username = inputForm.username.value;
             if (username.length < 4 || username.length > 10 || !usernameRegex.test(username)) {
                 errors.push('Invalid username: Username must be 4-10 characters in length and can only contain letters and numbers.');
-        
+
                 usernameErr.style.display = "block";
                 usernameErr.innerHTML = 'Username must be 4-10 characters in length and can only contain letters and numbers.';
             } else {
                 usernameErr.style.display = "none";
                 usernameErr.innerHTML = '';
             }
-        
+
             // Check password: min 6 characters
             let password = inputForm.password.value;
             let passwordConfirm = inputForm.passwordConfirm.value;
@@ -253,8 +268,10 @@ module.exports = {
                     passwordErr.innerHTML = '';
                 }
             }
-        
+
+            // email regex that attempts to validate email addresses
             let emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
             // check email
             if (!emailRegex.test(inputForm.email.value)) {
                 errors.push('Invalid email: ' + inputForm.email.validationMessage);
@@ -264,7 +281,7 @@ module.exports = {
                 emailErr.style.display = 'none';
                 emailErr.innerHTML = '';
             }
-        
+
             // Check name: letters only and less than or equal to 30 characters
             let nameRegex = /^[a-zA-Z ]*$/;
             let name = inputForm.name.value;
@@ -276,19 +293,19 @@ module.exports = {
                 nameErr.style.display = 'none';
                 nameErr.innerHTML = '';
             }
-        
-            if (errors.length > 0 ) {
+
+            if (errors.length > 0) {
                 // write errors
                 let errorDiv = "<ul>!!replace!!</ul>";
-        
+
                 let lis = '';
-                errors.map(function(error) {
+                errors.map(function (error) {
                     let h = '<li>' + error + '</li>';
                     lis += h;
                 });
-        
+
                 let final = errorDiv.replace("!!replace!!", lis);
-        
+
                 let errorSection = document.getElementById("registerErrors");
                 //errorSection.style.display = 'block';
                 errorSection.innerHTML = final;
@@ -298,20 +315,24 @@ module.exports = {
             }
         }
 
-        let scripts = validation.toString() + "\n" + sendLoginRequest.toString() + "\n" + loginHandler.toString() + "\n" + registerHandler.toString() + "\n" + registerUser.toString() + "\n" + sendRegisterRequest.toString() + "\n" + validateRegistration.toString();
+        // combine all functions
+        let scripts = validation.toString() + "\n" + sendLoginRequest.toString() + "\n" + loginHandler.toString() + "\n" + registerHandler.toString() + "\n" + registerUser.toString() + "\n" + sendRegisterRequest.toString() + "\n" + validateRegistration.toString() + "\n" + clearFormErrors.toString();
 
+        // Login form template
         let formLogin = `
             <div id='loginD' class="form" style="display: block; border: 1px solid black;">
                 <div style='margin: 10px 10px 10px 10px;'>
                     <h2>Sign in...</h2>
                     <form id='loginForm' onsubmit="validation(this); return false;">
                         <p>
-                            <input id="username" name='username' type='text' placeholder="Username"></input>
+                            <label for="username" class="formTitle">Username</label>
+                            <input id="username" name='username' type='text'></input>
                             <span style="display: none;" id="usernameError" class="formerror"></span>
                         </p>
 
                         <p>
-                            <input id="password" name='password' type='password' placeholder="Password"></input>
+                            <label for="password" class="formTitle">Password</label>
+                            <input id="password" name='password' type='password'></input>
                             <span style="display: none;" id="passwordError" class="formerror"></span>
                         </p>
 
@@ -326,6 +347,7 @@ module.exports = {
             </div>
         `;
 
+        // Registration form template
         let formRegister = `
             <div id='registerD' class="form" style="display: none; border: 1px solid black;">
                 <div style='margin: 10px 10px 10px 10px;'>
@@ -333,27 +355,32 @@ module.exports = {
                     <form id='registerForm' onsubmit="registerUser(this); return false;">
                         
                         <p>
-                            <input name='name' type='text' placeholder='Full Name (First Last)'></input>
+                            <label for="name" class="formTitle">Name</label>
+                            <input name='name' type='text'></input>
                             <span style="display: none;" id="_nameError" class="formerror"></span>
                         </p>
 
                         <p>
-                        <input name='username' type='text' placeholder="Username"></input>
-                        <span style="display: none;" id="_usernameError" class="formerror"></span>
+                            <label for="username" class="formTitle">Username</label>
+                            <input name='username' type='text'></input>
+                            <span style="display: none;" id="_usernameError" class="formerror"></span>
                         </p>
 
                         <p>
-                            <input name='password' type='password' placeholder="Password"></input>
+                            <label for="password" class="formTitle">Password</label>
+                            <input name='password' type='password'></input>
                             <span style="display: none;" id="_passwordError" class="formerror"></span>
                         </p>
 
                         <p>
-                            <input name='passwordConfirm' type='password' placeholder="Retype Password"></input>
+                            <label for="passwordConfirm" class="formTitle">Retype Password</label>
+                            <input name='passwordConfirm' type='password'></input>
                             <span style="display: none;" id="_passwordConfirmError" class="formerror"></span>
                         </p>
 
                         <p>
-                            <input name='email' type='text' placeholder="E-mail"></input>
+                            <label for="email" class="formTitle">E-mail</label>
+                            <input name='email' type='text'></input>
                             <span style="display: none;" id="_emailError" class="formerror"></span>
                         </p>
 

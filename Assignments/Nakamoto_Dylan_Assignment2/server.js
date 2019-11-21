@@ -50,11 +50,14 @@ app.post('/loginPurchase', function (req, res) {
 
 // Process requests to register a user
 app.post('/processRegister', function (req, res) {
-    // find user in "database"
-    let userExists = typeof users[req.body.username] === 'undefined' ? false: true;
-
     let message = {};
     let userData = req.body;
+
+    // Force username to lower case (normalize username for case insensitivity)
+    userData.username = userData.username.toLowerCase();
+
+    // find user in "database"
+    let userExists = typeof users[req.body.username] === 'undefined' ? false : true;
 
     let canRegister = false;
     // CHECK: ensure username does not exist
@@ -63,10 +66,6 @@ app.post('/processRegister', function (req, res) {
         if (userData.password === userData.passwordConfirm) {
             // CHECK: email validation
             if (userData.email) {
-                message = {
-                    success: true,
-                    msg: 'Account created'
-                }
                 canRegister = true;
             } else {
                 message = {
@@ -97,15 +96,21 @@ app.post('/processRegister', function (req, res) {
         };
 
         // Write to the file
-        fs.writeFile('./users.json', JSON.stringify(users), function (err) {
-            // If could not write to file... catastrophic error occurred
-            if (err) {
-                message = {
-                    success: false,
-                    msg: "Something went terribly wrong creating your account"
-                }
+        try {
+            fs.writeFileSync('./users.json', JSON.stringify(users));
+
+            // Successfully wrote file
+            message = {
+                success: true,
+                msg: 'Account created'
             }
-        });
+        } catch (err) {
+            // Did not write to file
+            message = {
+                success: false,
+                msg: "Something went terribly wrong creating your account"
+            }
+        }
     }
 
     // send message back to request
@@ -118,11 +123,14 @@ app.post('/processRegister', function (req, res) {
 
 // Process requests to login
 app.post('/processLogin', function (req, res) {
-    // find user in "database"
-    let userExists = typeof users[req.body.username] === 'undefined' ? false: true;
-
     let message = {};
     let userData = req.body;
+
+    // normalize username
+    userData.username = userData.username.toLowerCase();
+
+    // find user in "database"
+    let userExists = typeof users[req.body.username] === 'undefined' ? false : true;
 
     // Check to make sure user exists
     if (userExists) {
@@ -157,7 +165,6 @@ app.post('/processLogin', function (req, res) {
 app.post("/checkout", function (req, res) {
     // CHECK REFERRER HERE TO TRY TO ENSURE CHECKOUTS OCCURS FROM /loginPurchase
 
-
     // Hold items that are purchased
     // So that we can rollback the inventory
     // count if the transaction fails
@@ -178,7 +185,13 @@ app.post("/checkout", function (req, res) {
     // because inventory will just be rolled back to 
     // original state if any errors exist.
     for (let item in purchases) {
+        // Clean the request... skip username
+        if (item === 'username') {
+            continue;
+        }
+
         const amtPurchased = purchases[item];
+
         // Skip items that have no quantity
         // ** do not try to purchase nothing of something **
         if (amtPurchased === '' || +amtPurchased === 0) {
@@ -238,7 +251,7 @@ app.post("/checkout", function (req, res) {
     // If transaction was successful, send an invoice
     // else send an error saying what went wrong
     if (response.success) {
-        res.send(template.createInvoice(response.purchaseState, taxPercent, shippingPercent));
+        res.send(template.createInvoice(response.purchaseState, taxPercent, shippingPercent, users[req.body.username.toLowerCase()]));
     } else {
         res.send(template.createErrorInvoice(errors));
     }

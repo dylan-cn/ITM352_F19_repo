@@ -1,7 +1,7 @@
 
 module.exports = {
     // creates the page for the invoice page
-    createInvoice: function (data, taxPercent, shippingPercent) {
+    createInvoice: function (data, taxPercent, shippingPercent, userData) {
         let htmlTemplate = `
             <!DOCTYPE html>
             <html lang="en">
@@ -20,7 +20,37 @@ module.exports = {
                 <li><a href='store'>Store</a></li>
             </ul>
                 <div class="container">
-                <h1>Thanks for your purchase</h1>
+                    <h1 align="center">Hello ${userData.name}!</h1>
+                    <hr style="width: 100%;">
+
+                    <div class="header">
+                        <div style="grid-column: 1">
+                            <h3>DYLAN'S STORE</h3>
+                            <p>
+                                Dylan Nakamoto <br />
+                                2500 Campus Rd Honolulu, HI 96813 <br />
+                                808-333-3333 <br />
+                                some@email.com
+                            </p>
+                        </div>
+
+                        <div style="grid-column: 2;">
+
+                            <div style="float: right;">
+                                <h3>SALES RECEIPT</h3> <br />
+                                <p><strong>Date:</strong> ${new Date().toDateString()}</p>
+                            </div>
+                        </div>
+                        
+                        <div style="grid-column: 1">
+                            <h3>SOLD TO</h3>
+                            <p>
+                                ${userData.name} <br />
+                                ${userData.email} <br />
+                            </p>
+                        </div>
+                    </div>
+
                     !!invoice!!
                 </div>
             </body>
@@ -30,13 +60,13 @@ module.exports = {
         let tableTemplate = `
             <table>
                 <tbody>
-                <tr>
-                    <th style="text-align: center;" colspan="1">Qty</th>
-                    <th style="text-align: center;" colspan="3">Item</th>
-                    <th style="text-align: center;" colspan="1">Unit Price</th>
-                </tr>
+                    <tr>
+                        <th style="text-align: center;" colspan="1">Qty</th>
+                        <th style="text-align: center;" colspan="3">Item</th>
+                        <th style="text-align: center;" colspan="1">Unit Price</th>
+                    </tr>
 
-                !!data!!
+                    !!data!!
 
                 </tbody>
             </table>
@@ -44,14 +74,15 @@ module.exports = {
 
         let subtotal = 0;
         let tableRows = ``;
+
         data.forEach(purchase => {
             let extendedPrice = purchase.amtPurchased * purchase.price;
             subtotal += extendedPrice;
             tableRows += `
             <tr>
-                <td style="text-align: center;" colspan="1">${purchase.amtPurchased}</th>
-                <td style="text-align: center;" colspan="3">${purchase.item}</th>
-                <td style="text-align: center;" colspan="1">$${purchase.price}</th>
+                <td style="text-align: center;" colspan="1">${purchase.amtPurchased}</td>
+                <td style="text-align: center;" colspan="3">${purchase.item}</td>
+                <td style="text-align: center;" colspan="1">$${purchase.price}</td>
             </tr>
         `;
         });
