@@ -28,7 +28,7 @@ input[type="password"],
 input[type="email"] {
     display: block;
     box-sizing: border-box;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
     padding: 4px;
     width: 220px;
     height: 32px;
