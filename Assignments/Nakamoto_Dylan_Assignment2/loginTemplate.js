@@ -97,6 +97,8 @@ module.exports = {
                 alert('Successful login');
 
                 // Append username to productsForm to pass along user
+                // This is a method to attempt to check that only a 
+                // logged in user is trying to checkouts
                 let uninput = document.createElement("input");
                 uninput.name = "username";
                 uninput.value = userInfo.username;

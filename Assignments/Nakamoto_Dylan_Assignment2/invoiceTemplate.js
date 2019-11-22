@@ -28,7 +28,7 @@ module.exports = {
                             <h3>DYLAN'S STORE</h3>
                             <p>
                                 Dylan Nakamoto <br />
-                                2500 Campus Rd Honolulu, HI 96813 <br />
+                                2500 Campus Rd Honolulu, HI 96819 <br />
                                 808-333-3333 <br />
                                 some@email.com
                             </p>
@@ -197,5 +197,66 @@ module.exports = {
         let htmlTem = htmlTemplate.replace('!!invoice!!', tableTemplate);
 
         return htmlTem;
+    },
+
+    createNotLoggedIn: function () {
+        let htmlTemplate = `
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                <title>Invoice</title>
+                <link rel='stylesheet' type='text/css' href='/css/app.css'>
+                <link rel='stylesheet' type='text/css' href='/css/navbar.css'>
+            </head>
+            <body>
+            <ul class='navbar'>
+                <li><a href='/'>Home</a></li>
+                <li><a href='store'>Store</a></li>
+            </ul>
+                <div class="container">
+                    <h1 align="center">You must log in to access!</h1>
+                    <p id="countdown" align="center">You will be redirected in... 5 seconds</p>
+                </div>
+
+                <script>
+                    !!script!!
+                    redirectTimer(new Date());
+                </script>
+            </body>
+            </html>
+        `;
+
+        // Function to update every second
+        function redirectTimer(startTime) {
+            // Update the count down every 1 second
+            var x = setInterval(function () {
+
+                // Get current time in ms
+                var now = new Date().getTime();
+
+                // Get the difference between now and startTime
+                var timeElapsed = now - startTime.getTime();
+
+                // Time calculations for seconds
+                var seconds = Math.floor((timeElapsed % (1000 * 60)) / 1000);
+
+                // Display the result in the element
+                document.getElementById("countdown").innerHTML = `You will be redirected in... ${5 - seconds} seconds`;
+
+                // check 5000 ms countdown
+                // send back to homepage when done counting
+                if (timeElapsed > 5000) {
+                    clearInterval(x);
+                    window.location.replace("/");
+                }
+            }, 1000);
+        }
+
+        let finalTemplate = htmlTemplate.replace('!!script!!', redirectTimer.toString());
+
+        return finalTemplate;
     }
 };

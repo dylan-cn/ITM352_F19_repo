@@ -163,7 +163,11 @@ app.post('/processLogin', function (req, res) {
 
 // Checkout the user
 app.post("/checkout", function (req, res) {
-    // CHECK REFERRER HERE TO TRY TO ENSURE CHECKOUTS OCCURS FROM /loginPurchase
+    // Check that user is logged in
+    if (typeof req.body['username'] === 'undefined') {
+        res.send(template.createNotLoggedIn());
+        return;
+    }
 
     // Hold items that are purchased
     // So that we can rollback the inventory
