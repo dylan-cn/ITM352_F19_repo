@@ -223,14 +223,14 @@ module.exports = {
 
                 <script>
                     !!script!!
-                    redirectTimer(new Date());
+                    redirectTimer(new Date(), 5000);
                 </script>
             </body>
             </html>
         `;
 
         // Function to update every second
-        function redirectTimer(startTime) {
+        function redirectTimer(startTime, amtOfTime) {
             // Update the count down every 1 second
             var x = setInterval(function () {
 
@@ -244,11 +244,11 @@ module.exports = {
                 var seconds = Math.floor((timeElapsed % (1000 * 60)) / 1000);
 
                 // Display the result in the element
-                document.getElementById("countdown").innerHTML = `You will be redirected in... ${5 - seconds} seconds`;
+                document.getElementById("countdown").innerHTML = `You will be redirected in... ${amtOfTime - seconds} seconds`;
 
                 // check 5000 ms countdown
                 // send back to homepage when done counting
-                if (timeElapsed > 5000) {
+                if (timeElapsed > amtOfTime) {
                     clearInterval(x);
                     window.location.replace("/");
                 }

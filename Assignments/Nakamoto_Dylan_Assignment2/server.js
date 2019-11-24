@@ -82,7 +82,7 @@ app.post('/processRegister', function (req, res) {
     } else {
         message = {
             success: false,
-            msg: 'User name already exists'
+            msg: 'Username already exists'
         }
     }
 
@@ -259,6 +259,12 @@ app.post("/checkout", function (req, res) {
     } else {
         res.send(template.createErrorInvoice(errors));
     }
+});
+
+// If did not match any route... direct to 404 page
+app.all('*', function (request, response) {
+    console.log("Request to a route that does not exist: " + request.path);
+    response.sendFile(path.join(__dirname, 'pages', '404.html'));
 });
 
 app.listen(8080, () => console.log(`listening on port 8080`));
