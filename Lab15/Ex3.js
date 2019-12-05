@@ -4,10 +4,12 @@ const myParser = require("body-parser");
 const data = require('./user_data.json');
 const fs = require('fs');
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
 
 app.use(myParser.urlencoded({ extended: true }));
 app.use(myParser.json());
 app.use(session({ secret: 'mySuperSecret' }));
+app.use(cookieParser());
 
 app.get('/use_session', function (req, res) {
     res.send('Welcome, your session ID is ' + req.sessionID);
@@ -21,10 +23,17 @@ app.get("/login", function (request, response) {
     } else {
         time = "First visit!";
     }
+
+    let userHtml = '';
+    if (request.cookies.hasOwnProperty('username')) {
+        userHtml = `<h1>Welcome ${request.cookies.username}</h1>`;
+    }
+
     // Give a simple login form
     str = `
         <body>
             <div id="bdy">
+                !!username!!
                 !!date!!
                 <br/>
                 <form onsubmit="sendLoginRequest(this); return false;">
@@ -62,7 +71,7 @@ app.get("/login", function (request, response) {
             </script>
         </body>
     `;
-    str = str.replace('!!date!!', time);
+    str = str.replace('!!date!!', time).replace('!!username!!', userHtml);
     response.send(str);
 });
 
@@ -87,6 +96,7 @@ app.post("/login", function (request, response) {
         });
     } else {
         request.session.lastVisit = new Date();
+        response.cookie('username', username);
         response.status(200).json({
             success: true
         });

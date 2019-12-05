@@ -11,6 +11,7 @@ app.use(session({ secret: 'mySuperSecret' }));
 
 app.get('/use_session', function (req, res) {
     res.send('Welcome, your session ID is ' + req.sessionID);
+    req.session.destroy();
 });
 
 app.get("/login", function (request, response) {
